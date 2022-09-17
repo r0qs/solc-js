@@ -14,6 +14,7 @@ workflows:
       - truffle-sample-project
       - cli-smoke-test
       - solidity-solcjs-ext-test
+      - download-release-solc-test
 
 version: 2.1
 
@@ -352,6 +353,16 @@ jobs:
       - run: git clone --depth 1 "https://github.com/ethereum/solidity" solidity/
       - run: cd solidity/ && curl "https://binaries.soliditylang.org/bin/soljson-nightly.js" --location --output soljson.js
       - run: cd solidity/ && test/externalTests/solc-js/solc-js.sh "$(realpath soljson.js)" "$(scripts/get_version.sh)" "$(realpath ../solc-js/)"
+
+  download-release-solc-test:
+    docker:
+      - image: cimg/node:16.15
+    steps:
+      - show-npm-version
+      - provision-and-package-solcjs
+      - run:
+          name: Check solc version with the released version
+          command: cd solc-js && scripts/update-and-check-binary.sh
 
   node-v10:
     <<: *node-base
