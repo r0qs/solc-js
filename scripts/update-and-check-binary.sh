@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 BASE_URL="https://binaries.soliditylang.org/bin"
 REPO_ROOT="$(dirname "$0")/.."
 
@@ -39,11 +41,11 @@ function check_version() {
 	npm run updateBinary
 	npm run build
 
+	check_version
+
 	# Check if current binary works
 	echo "contract C {}" > C.sol
 	node ./dist/solc.js C.sol --bin
-	[[ ! -f C_sol_C.bin ]] && fail "Failed: downloaded binary is not working"
+	[[ ! -f C_sol_C.bin ]] && fail "Failed: downloaded binary may not be working properly"
 	rm -f C.sol C_sol_C.bin
-
-	check_version
 )
