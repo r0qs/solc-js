@@ -29,6 +29,12 @@ function check_version() {
 	if [ "${current_sha}" != "${release_sha}" ]; then
 		fail "Failed: checksum mismatch:\n [current]: ${current_sha}\n [release]: ${release_sha}"
 	fi
+
+	# check if the current version is the latest release
+	latest_version=$(curl -s "${BASE_URL}/list.json"  | jq ".latestRelease" | tr -d '"')
+	if [ "${short_version}" != "${latest_version}" ]; then
+		fail "Failed: version is not the latest release:\n [current]: ${short_version}\n [latest]: ${latest_version}"
+	fi
 }
 
 (
