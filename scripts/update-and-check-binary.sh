@@ -47,12 +47,8 @@ function check_version() {
     # Remove previous soljson.js binary if exists
     [[ -f soljson.js ]] && rm -f soljson.js
 
-    # Update soljson.js binary
-    npm run updateBinary
-    npm run build
-
     check_version
 
-    # cleanup
+    # cleanup temp files
     [[ -f $LIST_FILE ]] && rm -f $LIST_FILE
 )

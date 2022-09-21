@@ -362,7 +362,11 @@ jobs:
       - provision-and-package-solcjs
       - run:
           name: Check solc version with the released version
-          command: cd solc-js && scripts/update-and-check-binary.sh
+          command: |
+            cd solc-js
+            npm run updateBinary
+            npm run build
+            scripts/update-and-check-binary.sh
 
   node-v10:
     <<: *node-base
