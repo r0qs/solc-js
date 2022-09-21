@@ -15,7 +15,7 @@ function check_version() {
 
 	# Retrieve the correspondent released version
 	short_version=$(echo "${current_version}" | sed -En 's/^([0-9.]+).*\+commit\.[0-9a-f]+.*$/\1/p')
-	release_version=$(curl -s "${BASE_URL}/list.json"  | jq ".releases | .[\"${short_version}\"]" | tr -d '"' | sed -En 's/^soljson-v(.*).js$/\1/p')
+	release_version=$(curl --silent --fail "${BASE_URL}/list.json" | jq ".releases | .[\"${short_version}\"]" | tr -d '"' | sed -En 's/^soljson-v(.*).js$/\1/p')
 
 	# check if current version exists as release
 	if [ "${current_version}" != "${release_version}" ]; then
