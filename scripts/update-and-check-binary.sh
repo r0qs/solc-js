@@ -27,7 +27,7 @@ function check_version() {
 
 	# check if sha matches
 	if [ "${current_sha}" != "${release_sha}" ]; then
-		fail "Failed: checksum mismatch:\n [current]: ${current_sha}\n [release]: ${release_sha}"
+		fail "ERROR: Checksum mismatch.\n [current]: ${current_sha}\n [release]: ${release_sha}"
 	fi
 
 	# check if the current version is the latest release
