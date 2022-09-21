@@ -12,18 +12,18 @@ function fail() {
 }
 
 function check_version() {
+    current_version=$1
+
     curl --silent --fail "$BASE_URL/list.json" -o $LIST_FILE
     [[ ! -f $LIST_FILE ]] && fail "download of release list failed:\n    [url]: $BASE_URL/list.json"
 
-    current_version=$(node ./dist/solc.js --version | sed -En 's/^(.*).Emscripten.*/\1/p')
+    # Retrieve the latest released version
+    latest_version=$(cat $LIST_FILE | jq --raw-output ".latestRelease")
+    release_version=$(cat $LIST_FILE | jq --raw-output ".releases | .[\"$latest_version\"]" | sed -En 's/^soljson-v(.*).js$/\1/p')
 
-    # Retrieve the correspondent released version
-    short_version=$(echo "$current_version" | sed -En 's/^([0-9.]+).*\+commit\.[0-9a-f]+.*$/\1/p')
-    release_version=$(cat $LIST_FILE | jq --raw-output ".releases | .[\"$short_version\"]" | sed -En 's/^soljson-v(.*).js$/\1/p')
-
-    # check if current version exists as release
+    # check if current version is the latest release
     if [ $current_version != "$release_version" ]; then
-        fail "version mismatch:\n    [current]: $current_version\n    [release]: $release_version"
+        fail "version is not the latest release:\n    [current]: $current_version\n    [latest]: $latest_version"
     fi
 
     current_sha=$(shasum -b -a 256 ./soljson.js | awk '{ print $1 }')
@@ -44,10 +44,11 @@ function check_version() {
 (
     cd "$REPO_ROOT"
 
-    # Remove previous soljson.js binary if exists
-    [[ -f soljson.js ]] && rm -f soljson.js
-
-    check_version
+    current_version=$(node ./dist/solc.js --version | sed -En 's/^(.*).Emscripten.*/\1/p')
+    check_version $current_version
+    if [ $? -eq 0 ]; then
+        echo "solc-js version $current_version is the latest release"
+    fi
 
     # cleanup temp files
     [[ -f $LIST_FILE ]] && rm -f $LIST_FILE
