@@ -18,7 +18,7 @@ function check_version() {
 	release_version=$(curl --silent --fail "${BASE_URL}/list.json" | jq ".releases | .[\"${short_version}\"]" | tr -d '"' | sed -En 's/^soljson-v(.*).js$/\1/p')
 
 	# check if current version exists as release
-	if [ "${current_version}" != "${release_version}" ]; then
+	if [[ $current_version != "$release_version" ]]; then
 		fail "Failed: version mismatch:\n [current]: ${current_version}\n [release]: ${release_version}"
 	fi
 
