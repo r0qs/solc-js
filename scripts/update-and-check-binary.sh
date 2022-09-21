@@ -15,7 +15,7 @@ function check_version() {
 
     # Retrieve the correspondent released version
     short_version=$(echo "$current_version" | sed -En 's/^([0-9.]+).*\+commit\.[0-9a-f]+.*$/\1/p')
-    release_version=$(curl --silent --fail "$BASE_URL/list.json" | jq ".releases | .[\"$short_version\"]" | tr -d '"' | sed -En 's/^soljson-v(.*).js$/\1/p')
+    release_version=$(curl --silent --fail "$BASE_URL/list.json" | jq --raw-output ".releases | .[\"$short_version\"]" | sed -En 's/^soljson-v(.*).js$/\1/p')
 
     # check if current version exists as release
     if [[ $current_version != "$release_version" ]]; then
@@ -23,7 +23,7 @@ function check_version() {
     fi
 
     current_sha=$(shasum -b -a 256 ./soljson.js | awk '{ print $1 }')
-    release_sha=$(curl -s "$BASE_URL/list.json" | jq ".builds[] | select(.longVersion == \"$release_version\") | .sha256" | tr -d '"' | sed 's/^0x//')
+    release_sha=$(curl -s "$BASE_URL/list.json" | jq --raw-output ".builds[] | select(.longVersion == \"$release_version\") | .sha256" | sed 's/^0x//')
 
 	# check if sha matches
 	if [ "${current_sha}" != "${release_sha}" ]; then
@@ -31,7 +31,7 @@ function check_version() {
 	fi
 
     # check if the current version is the latest release
-    latest_version=$(curl -s "$BASE_URL/list.json"  | jq ".latestRelease" | tr -d '"')
+    latest_version=$(curl -s "$BASE_URL/list.json"  | jq --raw-output ".latestRelease")
     if [ "$short_version" != "$latest_version" ]; then
         fail "Failed: version is not the latest release:\n [current]: $short_version\n [latest]: $latest_version"
     fi
