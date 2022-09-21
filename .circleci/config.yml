@@ -356,7 +356,7 @@ jobs:
 
   download-release-solc-test:
     docker:
-      - image: cimg/node:16.15
+      - image: cimg/node:current
     steps:
       - show-npm-version
       - provision-and-package-solcjs
