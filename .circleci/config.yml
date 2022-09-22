@@ -366,7 +366,7 @@ jobs:
             cd solc-js
             npm run updateBinary
             npm run build
-            scripts/update-and-check-binary.sh
+            scripts/check-binary.sh
 
   node-v10:
     <<: *node-base
