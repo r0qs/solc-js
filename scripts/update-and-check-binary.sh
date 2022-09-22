@@ -15,7 +15,7 @@ function check_version() {
     current_version=$1
 
     curl --silent --fail "$BASE_URL/list.json" -o $LIST_FILE
-    [[ ! -f $LIST_FILE ]] && fail "download of release list failed:\n    [url]: $BASE_URL/list.json"
+    [[ ! -f $LIST_FILE ]] && fail "Download of release list failed:\n    [url]: $BASE_URL/list.json"
 
     # Retrieve the latest released version
     latest_version=$(cat $LIST_FILE | jq --raw-output ".latestRelease")
@@ -23,21 +23,15 @@ function check_version() {
 
     # check if current version is the latest release
     if [ $current_version != "$release_version" ]; then
-        fail "version is not the latest release:\n    [current]: $current_version\n    [latest]: $latest_version"
+        fail "Version is not the latest release:\n    [current]: $current_version\n    [latest]: $latest_version"
     fi
 
     current_sha=$(shasum -b -a 256 ./soljson.js | awk '{ print $1 }')
     release_sha=$(cat $LIST_FILE | jq --raw-output ".builds[] | select(.longVersion == \"$release_version\") | .sha256" | sed 's/^0x//')
 
-	# check if sha matches
-	if [ "${current_sha}" != "${release_sha}" ]; then
-		fail "ERROR: Checksum mismatch.\n [current]: ${current_sha}\n [release]: ${release_sha}"
-	fi
-
-    # check if the current version is the latest release
-    latest_version=$(cat $LIST_FILE | jq --raw-output ".latestRelease")
-    if [ "$short_version" != "$latest_version" ]; then
-        fail "version is not the latest release:\n    [current]: $short_version\n    [latest]: $latest_version"
+    # check if sha matches
+    if [ "$current_sha" != "$release_sha" ]; then
+        fail "Checksum mismatch.\n    [current]: $current_sha\n    [release]: $release_sha"
     fi
 }
 
