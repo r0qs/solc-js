@@ -19,14 +19,14 @@ function check_version() {
 
     # Retrieve the latest released version
     latest_version=$(cat $LIST_FILE | jq --raw-output ".latestRelease")
-    release_version=$(cat $LIST_FILE | jq --raw-output ".releases | .[\"$latest_version\"]" | sed -En 's/^soljson-v(.*).js$/\1/p')
+    release_version=$(cat $LIST_FILE | jq --raw-output ".releases | .[\"$latest_version\"]" | sed --regexp-extended --quiet 's/^soljson-v(.*).js$/\1/p')
 
     # check if current version is the latest release
     if [ $current_version != "$release_version" ]; then
         fail "Version is not the latest release:\n    [current]: $current_version\n    [latest]: $latest_version"
     fi
 
-    current_sha=$(shasum -b -a 256 ./soljson.js | awk '{ print $1 }')
+    current_sha=$(shasum --binary --algorithm 256 ./soljson.js | awk '{ print $1 }')
     release_sha=$(cat $LIST_FILE | jq --raw-output ".builds[] | select(.longVersion == \"$release_version\") | .sha256" | sed 's/^0x//')
 
     # check if sha matches
@@ -38,7 +38,7 @@ function check_version() {
 (
     cd "$REPO_ROOT"
 
-    current_version=$(node ./dist/solc.js --version | sed -En 's/^(.*).Emscripten.*/\1/p')
+    current_version=$(node ./dist/solc.js --version | sed --regexp-extended --quiet 's/^(.*).Emscripten.*/\1/p')
     check_version $current_version
     if [ $? -eq 0 ]; then
         echo "solc-js version $current_version is the latest release"
