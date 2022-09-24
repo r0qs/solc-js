@@ -12,7 +12,7 @@ function fail() {
 }
 
 function check_release_version() {
-    current_version=$1
+    local current_version="$1"
 
     curl --silent --fail "$BASE_URL/list.json" -o $LIST_FILE
     [[ ! -f $LIST_FILE ]] && fail "Download of release list failed:\n    [url]: $BASE_URL/list.json"
