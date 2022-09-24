@@ -22,7 +22,7 @@ function check_release_version() {
     release_version=$(cat $LIST_FILE | jq --raw-output ".releases | .[\"$latest_version\"]" | sed --regexp-extended --quiet 's/^soljson-v(.*).js$/\1/p')
 
     # Check if current version is the latest release
-    if [ $current_version != "$release_version" ]; then
+    if [[ $current_version != "$release_version" ]]; then
         fail "Version is not the latest release:\n    [current]: $current_version\n    [latest]: $latest_version"
     fi
 
@@ -30,7 +30,7 @@ function check_release_version() {
     release_sha=$(cat $LIST_FILE | jq --raw-output ".builds[] | select(.longVersion == \"$release_version\") | .sha256" | sed 's/^0x//')
 
     # Check if sha matches
-    if [ "$current_sha" != "$release_sha" ]; then
+    if [[ $current_sha != "$release_sha" ]]; then
         fail "Checksum mismatch.\n    [current]: $current_sha\n    [release]: $release_sha"
     fi
 }
