@@ -51,5 +51,5 @@ function check_release_version() {
     fi
 
     # Cleanup temp files
-    [[ -f $LIST_FILE ]] && rm -f $LIST_FILE
+    rm -f "$LIST_FILE"
 )
