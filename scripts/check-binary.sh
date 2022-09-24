@@ -15,7 +15,7 @@ function check_release_version() {
     local current_version="$1"
 
     curl --silent --fail "$BASE_URL/list.json" -o $LIST_FILE
-    [[ ! -f $LIST_FILE ]] && fail "Download of release list failed:\n    [url]: $BASE_URL/list.json"
+    [[ ! -f $LIST_FILE ]] && fail "Download of release list failed:\n    [url]: ${BASE_URL}/list.json"
 
     # Retrieve the latest released version
     latest_version=$(cat $LIST_FILE | jq --raw-output ".latestRelease")
