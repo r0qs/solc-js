@@ -18,7 +18,7 @@ function check_release_version() {
     [[ ! -f $LIST_FILE ]] && fail "Download of release list failed:\n    [url]: ${BASE_URL}/list.json"
 
     # Retrieve the latest released version
-    latest_version=$(cat $LIST_FILE | jq --raw-output ".latestRelease")
+    latest_version=$(cat "$LIST_FILE" | jq --raw-output ".latestRelease")
     release_version=$(cat $LIST_FILE | jq --raw-output ".releases | .[\"$latest_version\"]" | sed --regexp-extended --quiet 's/^soljson-v(.*).js$/\1/p')
 
     # Check if current version is the latest release
