@@ -14,7 +14,7 @@ workflows:
       - truffle-sample-project
       - cli-smoke-test
       - solidity-solcjs-ext-test
-      - download-release-solc-test
+      - update-binary-test
 
 version: 2.1
 
@@ -359,7 +359,11 @@ jobs:
       - image: cimg/node:current
     steps:
       - show-npm-version
-      - provision-and-package-solcjs
+      - checkout:
+          path: solc-js
+      - install-dependencies:
+          cache-id: solc-js
+          path: solc-js
       - run:
           name: Verify that `npm run updateBinary` downloads the latest release
           command: |
