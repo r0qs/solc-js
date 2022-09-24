@@ -4,7 +4,7 @@ set -euo pipefail
 
 BASE_URL="https://binaries.soliditylang.org/bin"
 REPO_ROOT="$(dirname "$0")/.."
-LIST_FILE=/tmp/list.json
+LIST_FILE=$(mktemp -t solc-bin-list-XXXXXX.json)
 
 function fail() {
     echo -e "ERROR: $@" >&2
