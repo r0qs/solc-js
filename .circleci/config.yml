@@ -361,12 +361,12 @@ jobs:
       - show-npm-version
       - provision-and-package-solcjs
       - run:
-          name: Check solc version with the released version
+          name: Verify that `npm run updateBinary` downloads the latest release
           command: |
             cd solc-js
             npm run updateBinary
             npm run build
-            scripts/check-binary.sh
+            scripts/is-binary-up-to-date.sh
 
   node-v10:
     <<: *node-base
