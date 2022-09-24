@@ -46,7 +46,7 @@ function check_release_version() {
 
     # Verify if current version is the latest release
     if check_release_version "$current_version"; then
-        echo "solc-js version $current_version is the latest release"
+        echo "The currently installed soljson.js binary (${current_version}) matches the latest release available in solc-bin."
     fi
 
     # Cleanup temp files
