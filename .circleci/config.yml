@@ -354,7 +354,7 @@ jobs:
       - run: cd solidity/ && curl "https://binaries.soliditylang.org/bin/soljson-nightly.js" --location --output soljson.js
       - run: cd solidity/ && test/externalTests/solc-js/solc-js.sh "$(realpath soljson.js)" "$(scripts/get_version.sh)" "$(realpath ../solc-js/)"
 
-  download-release-solc-test:
+  update-binary-test:
     docker:
       - image: cimg/node:current
     steps:
