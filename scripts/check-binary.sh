@@ -45,8 +45,7 @@ function check_release_version() {
     node ./dist/verifyVersion.js
 
     # Verify if current version is the latest release
-    check_release_version $current_version
-    if [ $? -eq 0 ]; then
+    if check_release_version "$current_version"; then
         echo "solc-js version $current_version is the latest release"
     fi
 
